@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<classPathEntry
+		location="E:\mvn_repository\mysql\mysql-connector-java\5.1.29\mysql-connector-java-5.1.29.jar" />
+	<context id="chexian">
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" /><!-- 是否取消注释 -->
+			<property name="suppressDate" value="true" /> <!-- 是否生成注释代时间戳 -->
+		</commentGenerator>
+
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/chexian?useUnicode=true&amp;characterEncoding=UTF-8"
+			userId="root" password="" />
+		<javaModelGenerator targetPackage="com.picc.chexian.core.entity"
+			targetProject="chexian-core/src/main/java" />
+		<sqlMapGenerator targetPackage="mybatis.mapper"
+			targetProject="chexian-core/src/main/resources" />
+		<javaClientGenerator targetPackage="com.picc.chexian.core.mapper"
+			targetProject="chexian-core/src/main/java" type="XMLMAPPER" />
+
+		<table schema="chexian" tableName="tb_area"
+			domainObjectName="Area" enableCountByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			enableUpdateByExample="false" />
+			
+	</context>
+</generatorConfiguration>

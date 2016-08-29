@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.picc.chexian.core.mapper.FactoryMapper" >
+  <resultMap id="BaseResultMap" type="com.picc.chexian.core.entity.Factory" >
+    <id column="ID" property="id" />
+    <result column="NAME" property="name" />
+    <result column="PROVINCE" property="province" />
+    <result column="CITY" property="city" />
+    <result column="DISTRICT" property="district" />
+    <result column="REG_ADDRESS" property="regAddress" />
+    <result column="SERVICE_ADDRESS" property="serviceAddress" />
+    <result column="LEGAL_PERSON" property="legalPerson" />
+    <result column="QUALIF" property="qualif" />
+    <result column="LON" property="lon" jdbcType="DOUBLE" />
+    <result column="LAT" property="lat" jdbcType="DOUBLE" />
+    <result column="CATEGORY" property="category" />
+    <result column="REG_FUND" property="regFund" />
+    <result column="CREDIT_CODE" property="creditCode" />
+    <result column="BUSINESS_LISENCE_CODE" property="businessLisenceCode" />
+    <result column="ORG_CODE" property="orgCode" />
+    <result column="BUSINESS_SCOPE" property="businessScope" />
+    <result column="EXPIRE" property="expire" />
+    <result column="IMG_BUSINESS_LISENCE" property="imgBusinessLisence" />
+    <result column="IMG_ORG_CODE" property="imgOrgCode" />
+    <result column="IMG_BUSINESS_CERT" property="imgBusinessCert" />
+    <result column="CREATE_TIME" property="createTime" />
+    <result column="CREATOR" property="creator" />
+    <result column="STATUS" property="status" />
+    <result column="APPROVE_TIME" property="approveTime" />
+    <result column="APPROVER" property="approver" />
+    <result column="OFFLINE_TIME" property="offlineTime" />
+    <result column="OFFLINER" property="offliner" />
+    <result column="COMMENT" property="comment" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME, PROVINCE, CITY, DISTRICT, REG_ADDRESS, SERVICE_ADDRESS, LEGAL_PERSON, QUALIF, LON, LAT, CATEGORY, 
+    REG_FUND, CREDIT_CODE, BUSINESS_LISENCE_CODE, ORG_CODE, BUSINESS_SCOPE, EXPIRE, IMG_BUSINESS_LISENCE, 
+    IMG_ORG_CODE, IMG_BUSINESS_CERT, CREATE_TIME, CREATOR, STATUS, APPROVE_TIME, APPROVER, 
+    OFFLINE_TIME, OFFLINER, COMMENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_factory
+    where ID = #{id}
+  </select>
+  
+  <select id="selectByPage" resultMap="BaseResultMap">
+	SELECT 
+    <include refid="Base_Column_List" />
+	FROM tb_factory t 
+	WHERE t.`STATUS` IN 
+	<foreach collection="status" item="st" index="index" open="(" close=")" separator=",">
+    	#{st}
+    </foreach>
+		AND t.`CITY` = #{city}
+	<if test="startDate != null and startDate!=''">
+		AND t.`CREATE_TIME` &gt; #{startDate}
+	</if>
+	<if test="endDate != null and endDate !=''">
+		AND t.`CREATE_TIME` &lt; #{endDate}
+	</if>
+	<if test="name != null and name != ''">
+		AND t.`NAME` LIKE CONCAT('${name}', '%')
+	</if>
+	ORDER BY t.`ID`
+	LIMIT #{start}, #{size}    
+  </select>
+  
+  <select id="selectCountByPage" resultType="int">
+	SELECT count(1)
+	FROM tb_factory t 
+	WHERE t.`STATUS` IN 
+	<foreach collection="status" item="st" index="index" open="(" close=")" separator=",">
+    	#{st}
+    </foreach>
+		AND t.`CITY` = #{city}
+	<if test="startDate != null and startDate!=''">
+		<![CDATA[ AND t.`CREATE_TIME` >= #{startDate} ]]>
+	</if>
+	<if test="endDate != null and endDate!=''">
+		<![CDATA[ AND t.`CREATE_TIME` <= #{endDate} ]]>
+	</if>
+	<if test="name != null and name!=''">
+		AND t.`NAME` LIKE CONCAT('${name}', '%')
+	</if>
+  </select>
+  
+  <select id="selectByCreator" resultMap="BaseResultMap">
+	SELECT 
+    <include refid="Base_Column_List" />
+	FROM tb_factory t 
+	WHERE t.`CREATOR` = #{creator}
+		AND t.`STATUS` in 
+	<foreach collection="status" item="st" index="index" open="(" close=")" separator=",">
+    	#{st}
+    </foreach>
+	ORDER BY t.`ID`
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_factory
+    where ID = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.picc.chexian.core.entity.Factory" >
+	<selectKey resultType="int" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID() AS id
+	</selectKey>
+    insert into tb_factory (ID, NAME, PROVINCE, 
+      CITY, DISTRICT, REG_ADDRESS, 
+      SERVICE_ADDRESS, LEGAL_PERSON, QUALIF, 
+      LON, LAT, CATEGORY, REG_FUND, 
+      CREDIT_CODE, BUSINESS_LISENCE_CODE, ORG_CODE, 
+      BUSINESS_SCOPE, EXPIRE, IMG_BUSINESS_LISENCE, 
+      IMG_ORG_CODE, IMG_BUSINESS_CERT, CREATE_TIME, 
+      CREATOR, STATUS, APPROVE_TIME, 
+      APPROVER, OFFLINE_TIME, OFFLINER
+      )
+    values (#{id}, #{name}, #{province}, 
+      #{city}, #{district}, #{regAddress}, 
+      #{serviceAddress}, #{legalPerson}, #{qualif}, 
+      #{lon}, #{lat}, #{category}, #{regFund}, 
+      #{creditCode}, #{businessLisenceCode}, #{orgCode}, 
+      #{businessScope}, #{expire}, #{imgBusinessLisence}, 
+      #{imgOrgCode}, #{imgBusinessCert}, #{createTime}, 
+      #{creator}, #{status}, #{approveTime}, 
+      #{approver}, #{offlineTime}, #{offliner}
+      )
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.picc.chexian.core.entity.Factory" >
+    update tb_factory
+    <set >
+      <if test="name != null" >
+        NAME = #{name},
+      </if>
+      <if test="province != null" >
+        PROVINCE = #{province},
+      </if>
+      <if test="city != null" >
+        CITY = #{city},
+      </if>
+      <if test="district != null" >
+        DISTRICT = #{district},
+      </if>
+      <if test="regAddress != null" >
+        REG_ADDRESS = #{regAddress},
+      </if>
+      <if test="serviceAddress != null" >
+        SERVICE_ADDRESS = #{serviceAddress},
+      </if>
+      <if test="legalPerson != null" >
+        LEGAL_PERSON = #{legalPerson},
+      </if>
+      <if test="qualif != null" >
+        QUALIF = #{qualif},
+      </if>
+      <if test="lon != null" >
+        LON = #{lon},
+      </if>
+      <if test="lat != null" >
+        LAT = #{lat},
+      </if>
+      <if test="category != null" >
+        CATEGORY = #{category},
+      </if>
+      <if test="regFund != null" >
+        REG_FUND = #{regFund},
+      </if>
+      <if test="creditCode != null" >
+        CREDIT_CODE = #{creditCode},
+      </if>
+      <if test="businessLisenceCode != null" >
+        BUSINESS_LISENCE_CODE = #{businessLisenceCode},
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE = #{orgCode},
+      </if>
+      <if test="businessScope != null" >
+        BUSINESS_SCOPE = #{businessScope},
+      </if>
+      <if test="expire != null" >
+        EXPIRE = #{expire},
+      </if>
+      <if test="imgBusinessLisence != null" >
+        IMG_BUSINESS_LISENCE = #{imgBusinessLisence},
+      </if>
+      <if test="imgOrgCode != null" >
+        IMG_ORG_CODE = #{imgOrgCode},
+      </if>
+      <if test="imgBusinessCert != null" >
+        IMG_BUSINESS_CERT = #{imgBusinessCert},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime},
+      </if>
+      <if test="creator != null" >
+        CREATOR = #{creator},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status},
+      </if>
+      <if test="approveTime != null" >
+        APPROVE_TIME = #{approveTime},
+      </if>
+      <if test="approver != null" >
+        APPROVER = #{approver},
+      </if>
+      <if test="offlineTime != null" >
+        OFFLINE_TIME = #{offlineTime},
+      </if>
+      <if test="offliner != null" >
+        OFFLINER = #{offliner},
+      </if>
+      <if test="comment != null" >
+        COMMENT = #{comment},
+      </if>
+    </set>
+    where ID = #{id}
+  </update>
+  
+</mapper>

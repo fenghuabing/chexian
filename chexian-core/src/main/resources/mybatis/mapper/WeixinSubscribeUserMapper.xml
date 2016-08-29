@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.xigua.core.mapper.WeixinSubscribeUserMapper">
+	<resultMap id="BaseResultMap"
+		type="com.picc.chexian.core.entity.WeixinSubscribeUser">
+		<id column="openid" property="openid" />
+		<result column="nickname" property="nickname" />
+		<result column="sex" property="sex" />
+		<result column="language" property="language" />
+		<result column="city" property="city" />
+		<result column="province" property="province" />
+		<result column="country" property="country" />
+		<result column="headimgurl" property="headimgurl" />
+		<result column="unionid" property="unionid" />
+		<result column="invite_code" property="inviteCode" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="enable" property="enable" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		openid, unionid, nickname, sex, language, city, province,
+		country, headimgurl, create_time, update_time, invite_code, enable
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from tb_weixin_subscribe_user
+		where id = #{id}
+	</select>
+
+	<select id="selectByOpenid" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from tb_weixin_subscribe_user
+		where openid = #{openid}
+	</select>
+	<select id="selectByUnionid" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from tb_weixin_subscribe_user
+		where unionid = #{unionid}
+	</select>
+
+	<delete id="deleteByOpenid" parameterType="java.lang.String">
+		delete from
+		tb_weixin_subscribe_user
+		where openid = #{openid}
+	</delete>
+
+	<insert id="insert" parameterType="com.picc.chexian.core.entity.WeixinSubscribeUser">
+		insert into
+		tb_weixin_subscribe_user (openid, unionid, nickname,
+		sex, language,
+		city, province, country, headimgurl,
+		create_time, update_time,
+		invite_code, enable
+		)
+		values (#{openid}, #{unionid}, #{nickname},
+		#{sex},
+		#{language}, #{city}, #{province}, #{country},
+		#{headimgurl},
+		#{createTime}, #{updateTime},
+		#{inviteCode}, TRUE
+		)
+	</insert>
+	<update id="updateInviteCodeByOpenid">
+		UPDATE tb_weixin_subscribe_user 
+		SET invite_code=#{inviteCode }, enable = TRUE 
+		WHERE openid=#{openid }
+	</update>
+	<update id="unsubscribe" parameterType="string">
+		UPDATE tb_weixin_subscribe_user SET enable= FALSE WHERE openid=#{openid }
+	</update>
+</mapper>

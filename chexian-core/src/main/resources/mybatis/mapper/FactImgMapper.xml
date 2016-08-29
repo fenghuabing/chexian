@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.picc.chexian.core.mapper.FactImgMapper" >
+  <resultMap id="BaseResultMap" type="com.picc.chexian.core.entity.FactImg" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="FACT_ID" property="factId" jdbcType="INTEGER" />
+    <result column="PATH" property="path" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="SMALLINT" />
+    <result column="APPROVE_TIME" property="approveTime" jdbcType="TIMESTAMP" />
+    <result column="APPROVER" property="approver" jdbcType="INTEGER" />
+    <result column="OFFLINE_TIME" property="offlineTime" jdbcType="TIMESTAMP" />
+    <result column="OFFLINER" property="offliner" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, FACT_ID, PATH, TYPE, CREATE_TIME, STATUS, APPROVE_TIME, APPROVER, OFFLINE_TIME, 
+    OFFLINER
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_fact_img
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByFactoryId" resultType="string">
+    select PATH
+    from tb_fact_img
+    where FACT_ID = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_fact_img
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="deleteByFactoryId" parameterType="java.lang.Integer" >
+    delete from tb_fact_img
+    where FACT_ID = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.picc.chexian.core.entity.FactImg" >
+	<selectKey resultType="int" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID() AS id
+	</selectKey>
+    insert into tb_fact_img (ID, FACT_ID, PATH, 
+      TYPE, CREATE_TIME, STATUS, 
+      APPROVE_TIME, APPROVER, OFFLINE_TIME, 
+      OFFLINER)
+    values (#{id,jdbcType=INTEGER}, #{factId,jdbcType=INTEGER}, #{path,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT}, 
+      #{approveTime,jdbcType=TIMESTAMP}, #{approver,jdbcType=INTEGER}, #{offlineTime,jdbcType=TIMESTAMP}, 
+      #{offliner,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.picc.chexian.core.entity.FactImg" >
+    update tb_fact_img
+    <set >
+      <if test="factId != null" >
+        FACT_ID = #{factId,jdbcType=INTEGER},
+      </if>
+      <if test="path != null" >
+        PATH = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="approveTime != null" >
+        APPROVE_TIME = #{approveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approver != null" >
+        APPROVER = #{approver,jdbcType=INTEGER},
+      </if>
+      <if test="offlineTime != null" >
+        OFFLINE_TIME = #{offlineTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="offliner != null" >
+        OFFLINER = #{offliner,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

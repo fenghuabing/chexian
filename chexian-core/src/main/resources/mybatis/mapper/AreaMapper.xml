@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.picc.chexian.core.mapper.AreaMapper" >
+  <resultMap id="BaseResultMap" type="com.picc.chexian.core.entity.Area" >
+    <id column="vc2area_guid" property="vc2areaGuid" jdbcType="VARCHAR" />
+    <result column="vc2area_code" property="vc2areaCode" jdbcType="VARCHAR" />
+    <result column="vc2p_area_guid" property="vc2pAreaGuid" jdbcType="VARCHAR" />
+    <result column="vc2area_type" property="vc2areaType" jdbcType="VARCHAR" />
+    <result column="vc2area_name" property="vc2areaName" jdbcType="VARCHAR" />
+    <result column="vc2long_areaname" property="vc2longAreaname" jdbcType="VARCHAR" />
+    <result column="numorder" property="numorder" jdbcType="BIGINT" />
+    <result column="vc2enabledflag" property="vc2enabledflag" jdbcType="CHAR" />
+    <result column="division_code" property="divisionCode" jdbcType="VARCHAR" />
+    <result column="division_name" property="divisionName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    vc2area_guid, vc2area_code, vc2p_area_guid, vc2area_type, vc2area_name, vc2long_areaname, 
+    numorder, vc2enabledflag, division_code, division_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_area
+    where vc2area_guid = #{id}
+  </select>
+  
+  <select id="selectByPid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_area
+    where vc2p_area_guid = #{pid} AND vc2enabledflag = 'Y'
+    ORDER BY vc2area_code
+  </select>
+
+  <select id="selectByPids" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_area
+    where vc2p_area_guid IN
+	<foreach collection="pids" item="pid" index="index" open="(" close=")" separator=",">
+    	#{pid}
+    </foreach>
+    	AND vc2enabledflag = 'Y'
+    ORDER BY vc2area_code
+  </select>
+  
+</mapper>

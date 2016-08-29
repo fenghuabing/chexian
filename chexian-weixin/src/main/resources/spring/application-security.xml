@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+    	http://www.springframework.org/schema/security	http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans		http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Configuring RoleVoter bean to use custom access roles, by default roles 
+		should be in the form ROLE_{XXX} -->
+	<beans:bean id="roleVoter"
+		class="org.springframework.security.access.vote.RoleVoter">
+		<beans:property name="rolePrefix" value="R_"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="accessDecisionManager"
+		class="org.springframework.security.access.vote.AffirmativeBased">
+		<beans:constructor-arg name="decisionVoters"
+			ref="roleVoter" />
+	</beans:bean>
+	<http authentication-manager-ref="dao-auth"
+		access-decision-manager-ref="accessDecisionManager">
+
+		<intercept-url pattern="/index" access="R_CITY_EDIT" />
+		<intercept-url pattern="/input" access="R_CITY_EDIT" />
+		<intercept-url pattern="/add" access="R_CITY_EDIT" />
+		<intercept-url pattern="/map" access="R_CITY_EDIT" />
+		<intercept-url pattern="/location" access="R_CITY_EDIT" />
+		<intercept-url pattern="/passwd" access="R_CITY_EDIT" />
+
+		<form-login login-page="/login"
+			authentication-failure-url="/login?error=1" username-parameter="username"
+			password-parameter="password" default-target-url="/index"
+			always-use-default-target="true" />
+		<logout invalidate-session="true" logout-success-url="/logout"
+			logout-url="/j_spring_security_logout" delete-cookies="JSESSIONID" />
+		<access-denied-handler error-page="/denied" />
+		<session-management invalid-session-url="/login">
+			<concurrency-control max-sessions="1"
+				expired-url="/login?error=3" />
+		</session-management>
+
+		<remember-me key="e37f4b31-0c45-11dd-bd0b-0800200c9a66"
+			token-validity-seconds="604800" remember-me-parameter="remember_me" />
+
+	</http>
+
+	<authentication-manager id="dao-auth">
+		<authentication-provider user-service-ref="userDetailServiceImpl">
+			<password-encoder hash="md5" />
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>
