@@ -41,7 +41,7 @@ div.dataTables_info {
 	float: left;
 	padding-top: 4px;
 }
-ul.ztree {margin-top: 10px;border: 1px solid #617775;background: #f0f6e4;width:220px;height:500px;overflow-y:scroll;overflow-x:auto;}
+ul.ztree {margin-top: 10px;border: 1px solid #617775;background: #f0f6e4;height:500px;overflow-y:scroll;overflow-x:auto;}
 
 </style>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/thirdpart_framework/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
